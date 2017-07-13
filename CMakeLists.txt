@@ -281,14 +281,18 @@ option(LOG_LIST_ACTIONS "Add list actions logging" OFF)
 
 add_definitions(-DINCLUDE_GENERATED_DECLARATIONS)
 
-if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(CMAKE_COMPILER_IS_GNUCXX)
+  if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-undefined")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined")
+  endif()
 
   # For O_CLOEXEC, O_DIRECTORY, and O_NOFOLLOW flags on older systems
   # (pre POSIX.1-2008: glibc 2.11 and earlier). #4042
   add_definitions(-D_GNU_SOURCE)
+  # post POSIX.1-2008: (glibc 2.11 and after).
+  add_definitions(-D_POSIX_C_SOURCE=200809)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_SYSTEM_NAME STREQUAL "SunOS")

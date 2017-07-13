@@ -1342,7 +1342,7 @@ static int utf_strnicmp(const char_u *s1, const char_u *s2, size_t n1,
 #endif
 
 /// Reassigns `strw` to a new, allocated pointer to a UTF16 string.
-int utf8_to_utf16(const char *str, WCHAR **strw)
+int utf8_to_utf16(const char *str, wchar_t **strw)
   FUNC_ATTR_NONNULL_ALL
 {
   ssize_t wchar_len = 0;
@@ -1358,7 +1358,7 @@ int utf8_to_utf16(const char *str, WCHAR **strw)
     return GetLastError();
   }
 
-  ssize_t buf_sz = wchar_len * sizeof(WCHAR);
+  ssize_t buf_sz = wchar_len * sizeof(wchar_t);
 
   if (buf_sz == 0) {
     *strw = NULL;
@@ -1372,19 +1372,19 @@ int utf8_to_utf16(const char *str, WCHAR **strw)
                               0,
                               str,
                               -1,
-                              (WCHAR *)pos,
+                              (wchar_t *)pos,
                               wchar_len);
   assert(r == wchar_len);
   if (r != wchar_len) {
     EMSG2("MultiByteToWideChar failed: %d", r);
   }
-  *strw = (WCHAR *)pos;
+  *strw = (wchar_t *)pos;
 
   return 0;
 }
 
 /// Reassigns `str` to a new, allocated pointer to a UTF8 string.
-int utf16_to_utf8(const WCHAR *strw, char **str)
+int utf16_to_utf8(const wchar_t *strw, char **str)
   FUNC_ATTR_NONNULL_ALL
 {
   // Compute the space required to store the string as UTF-8.
